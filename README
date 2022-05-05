@@ -1,0 +1,20 @@
+SYNOPSIS
+  demo [OPTION...]
+
+DESCRIPTION
+  Procedurally generate 2D maps using the wave function collapse algorithm.
+
+OPTIONS
+  Functional
+    -d, --debug
+      Output is extra verbose and will provide logs.
+
+    -f, --fps
+      Display the amount of frames per second being displayed.
+
+  Cosemetic
+    --background-color=HEXCOLOR
+      Makes the background color the six digit hexidecimal value given.
+
+    --grid-color=HEXCOLOR
+      Makes the grid and number color the six digit hexidecimal value given.
