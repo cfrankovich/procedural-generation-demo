@@ -10,7 +10,7 @@ override LIBS += $(SDL_LIBS)
 all: create 
 	@echo "Done!"
 
-create: demo.o text.o tools.o
+create: demo.o text.o tools.o drawing.o
 	$(CC) $(LDFLAGS) -o $(NAME) $^ $(LIBS)
 
 demo.o: demo.c 
@@ -20,6 +20,9 @@ text.o: text.c
 	$(CC) $(LDFLAGS) -o $@ -c $^ $(LIBS)
 
 tools.o: tools.c
+	$(CC) $(LDFLAGS) -o $@ -c $^ $(LIBS)
+
+drawing.o: drawing.c
 	$(CC) $(LDFLAGS) -o $@ -c $^ $(LIBS)
 
 clean:

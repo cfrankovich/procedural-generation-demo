@@ -10,11 +10,12 @@
 
 #include "text.h"
 #include "tools.h"
+#include "drawing.h"
 
 #define FPS 60 
 #define WIDTH 600 
 #define HEIGHT 600
-#define OPT_LIST "hdfHB:L:?"
+#define OPT_LIST "hdfHDFS:B:L:?"
 
 #define RED 0
 #define GREEN 1
@@ -39,13 +40,18 @@ int main(int argc, char **argv)
 	/* Parse Args */ 
 	bool FPS_FLAG = false;
 	bool DEBUG_FLAG = false;
+	bool NUMBERS_ENABLED = false;
 	int8_t background_color_rgb[3] = { 0, 0, 0 };
 	int8_t grid_color_rgb[3] = { 100, 100, 100 };
+	int GRID_SIZE = 60;
 
 	static struct option long_options[] = {
 		{"background-color", optional_argument, 0, 'B'},
 		{"grid-color",  optional_argument, 0, 'G'},
+		{"grid-size",  optional_argument, 0, 'S'},
 		{"help",  no_argument, 0, 'H'},
+		{"debug",  no_argument, 0, 'D'},
+		{"show-fps",  no_argument, 0, 'F'},
 	};
 
 	int opt_indx;
@@ -55,10 +61,16 @@ int main(int argc, char **argv)
 	{
 		switch(opt_char)
 		{
+			case 'n':
+				NUMBERS_ENABLED = true;
+				break;
+
+			case 'D':
 			case 'd':
 				DEBUG_FLAG = !DEBUG_FLAG;
 				break;
 
+			case 'F':
 			case 'f':
 				FPS_FLAG = !FPS_FLAG;
 				break;
@@ -73,6 +85,9 @@ int main(int argc, char **argv)
 				printf("      Output is extra verbose and will provide logs.\n\n");
 				printf("    -f, --fps\n");
 				printf("      Display the amount of frames per second being displayed.\n\n");
+				printf("    -n\n");
+				printf("      Toggle the amount of possible tiles displayed on each grid space.\n");
+				printf("      This option will only toggle if the grid size is 40 or above.\n"); 
 				printf("  Cosemetic\n");
 				printf("    --background-color=HEXCOLOR\n");
 				printf("      Makes the background color the six digit hexidecimal value given.\n\n");
@@ -81,10 +96,19 @@ int main(int argc, char **argv)
 				exit(0);
 				break;
 
+			case 'S':
+				if (optarg == NULL)
+				{
+					printf("Please provide an argument for the grid size.\n");
+					exit(1);
+				}
+				GRID_SIZE = atoi(optarg);
+				break;
+
 			case 'B':
 				if (optarg == NULL)
 				{
-					printf("Please provide an argument for the background color!\n");
+					printf("Please provide an argument for the background color.\n");
 					exit(1);
 				}
 				for (int i = 0, k = 0; i < 6; i+=2, k++)
@@ -96,7 +120,7 @@ int main(int argc, char **argv)
 			case 'G':
 				if (optarg == NULL)
 				{
-					printf("Please provide an argument for the grid color!\n");
+					printf("Please provide an argument for the grid color.\n");
 					exit(1);
 				}
 				for (int i = 0, k = 0; i < 6; i+=2, k++)
@@ -125,6 +149,7 @@ int main(int argc, char **argv)
 	int updates, count;
 	updates = count = 0;
 
+	/*
 	int w, h;
 	SDL_Texture *boardimg = NULL;
 	SDL_Rect boardrect;
@@ -132,12 +157,15 @@ int main(int argc, char **argv)
 	else boardimg = IMG_LoadTexture(renderer, "./assets/boarddebug.png");
 	boardrect.x = 0; boardrect.y = 0; 
 	boardrect.w = 600; boardrect.h = 600;
+	*/
 
 	typedef struct {
 		unsigned int id;
 		SDL_Texture *img;
 		SDL_Rect rect;
 	} Node; 
+
+	Node nodes[2]; /* temporary */
 
 	while (running)
 	{
@@ -169,6 +197,11 @@ int main(int argc, char **argv)
 		SDL_RenderClear(renderer);
 
 		/* Grid */
+		SDL_SetRenderDrawColor(renderer, grid_color_rgb[RED], grid_color_rgb[GREEN], grid_color_rgb[BLUE], 0xFF);
+		draw_grid_lines(renderer, GRID_SIZE, WIDTH, HEIGHT);
+
+		/* Numbers */
+		if (NUMBERS_ENABLED) { draw_numbers(renderer); }
 
 		/* Imgs */
 		//SDL_RenderCopy(renderer, boardimg, NULL, &boardrect);
@@ -194,7 +227,6 @@ int main(int argc, char **argv)
 		if (1000 / FPS > frametime) SDL_Delay((1000 / FPS) - frametime);
 	}
 
-	SDL_DestroyTexture(boardimg);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 

@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* just gets the rgb value from the two hex chars */
+/* Returns the rgb value given two hex chars */
+/* For example, FF will return 255 */
 int get_rgb_from_hex(int a, int b);
 
-/* Just returns the denary value of a hex character */
 /* A return value of -1 tells us that its invalid */
+/* Returns the denary value of a hex character */
+/* For example, F returns 15 */
 int hex_ascii_to_denary(int c);
 
 #endif
