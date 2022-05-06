@@ -16,6 +16,7 @@ typedef struct
 	TTF_Font *font;
 } Text_t;
 
-Text_t init_text(char *textstring, TTF_Font *font, int x, int y, SDL_Color olor, SDL_Renderer *rendrr);
+/* Returns the text type based on parameters given */
+Text_t init_text(char *textstring, TTF_Font *font, int x, int y, SDL_Color color, SDL_Renderer *renderer);
 
 #endif

@@ -8,18 +8,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
+#include "typesanddefs.h"
 #include "text.h"
 #include "tools.h"
 #include "drawing.h"
-
-#define FPS 60 
-#define WIDTH 600 
-#define HEIGHT 600
-#define OPT_LIST "hdfHDFS:B:L:?"
-
-#define RED 0
-#define GREEN 1
-#define BLUE 2
 
 int main(int argc, char **argv)
 {
@@ -44,6 +36,7 @@ int main(int argc, char **argv)
 	int8_t background_color_rgb[3] = { 0, 0, 0 };
 	int8_t grid_color_rgb[3] = { 100, 100, 100 };
 	int GRID_SIZE = 60;
+	/* char font_path[255]; */
 
 	static struct option long_options[] = {
 		{"background-color", optional_argument, 0, 'B'},
@@ -142,9 +135,8 @@ int main(int argc, char **argv)
 	SDL_Color white = { 255, 255, 255 };
 	SDL_Color red = { 226, 44, 44 };
 	SDL_Color blue = { 44, 44, 226 };
-
 	char framecount[16] = "Frames: 0\0";
-	Text_t frametext = init_text(framecount, font, 0, 288, white, renderer); 
+	Text_t frametext = init_text(framecount, font, 0, 0, white, renderer);
 
 	int updates, count;
 	updates = count = 0;
@@ -159,13 +151,21 @@ int main(int argc, char **argv)
 	boardrect.w = 600; boardrect.h = 600;
 	*/
 
-	typedef struct {
-		unsigned int id;
-		SDL_Texture *img;
-		SDL_Rect rect;
-	} Node; 
-
-	Node nodes[2]; /* temporary */
+	Node *nodes[WIDTH/GRID_SIZE * HEIGHT/GRID_SIZE]; /* temporary */
+	int i, x, y; 
+	x = 0;
+	y = 0;
+	for (i = 0; i < WIDTH/GRID_SIZE * HEIGHT/GRID_SIZE; i++)
+	{
+		Node *n = malloc(sizeof(Node));		
+		n->id = i;
+		n->img = NULL;
+		n->rect.x = x;
+		n->rect.y = y;
+		x += GRID_SIZE;
+		if (x + GRID_SIZE > WIDTH) { x = 0; y += GRID_SIZE; } 
+		nodes[i] = n;
+	}
 
 	while (running)
 	{
@@ -198,10 +198,14 @@ int main(int argc, char **argv)
 
 		/* Grid */
 		SDL_SetRenderDrawColor(renderer, grid_color_rgb[RED], grid_color_rgb[GREEN], grid_color_rgb[BLUE], 0xFF);
-		draw_grid_lines(renderer, GRID_SIZE, WIDTH, HEIGHT);
+		draw_grid_lines(renderer, GRID_SIZE);
 
 		/* Numbers */
-		if (NUMBERS_ENABLED) { draw_numbers(renderer); }
+		if (NUMBERS_ENABLED) 
+		{ 
+			Text_t numbertext = init_text("", fonttwo, 0, 0, white, renderer); 
+			draw_numbers(renderer, nodes, GRID_SIZE, numbertext); 
+		}
 
 		/* Imgs */
 		//SDL_RenderCopy(renderer, boardimg, NULL, &boardrect);

@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -O2 -Wall
 LDFLAGS =
 NAME = demo 
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2 SDL2_ttf SDL2_image)
