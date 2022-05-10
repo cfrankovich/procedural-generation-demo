@@ -1,3 +1,8 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* taking a break from this project to do a school project *
+*       the repo is lang-board-game if interested         * 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 SYNOPSIS
   demo [OPTION...]
 
@@ -12,9 +17,18 @@ OPTIONS
     -f, --fps
       Display the amount of frames per second being displayed.
 
+    -h, --help
+      Print out this menu to stdout.
+
+    --grid-size
+      Change the length of the tiles in the grid. 
+
   Cosemetic
     --background-color=HEXCOLOR
       Makes the background color the six digit hexidecimal value given.
 
     --grid-color=HEXCOLOR
       Makes the grid and number color the six digit hexidecimal value given.
+
+    -n
+      Display numbers on tiles representing the amount of tiles possible. 
