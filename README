@@ -20,7 +20,7 @@ OPTIONS
     -h, --help
       Print out this menu to stdout.
 
-    --grid-size
+    --grid-size=SIZE
       Change the length of the tiles in the grid. 
 
   Cosemetic
