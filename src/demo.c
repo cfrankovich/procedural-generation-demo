@@ -36,7 +36,6 @@ int main(int argc, char **argv)
 	int8_t background_color_rgb[3] = { 0, 0, 0 };
 	int8_t grid_color_rgb[3] = { 100, 100, 100 };
 	int GRID_SIZE = 60;
-	/* char font_path[255]; */
 
 	static struct option long_options[] = {
 		{"background-color", optional_argument, 0, 'B'},
@@ -133,25 +132,14 @@ int main(int argc, char **argv)
 	TTF_Font *fonttwo = TTF_OpenFont(LIBERATION_MONO_REGULAR, 20);
 
 	SDL_Color white = { 255, 255, 255 };
-	SDL_Color red = { 226, 44, 44 };
-	SDL_Color blue = { 44, 44, 226 };
 	char framecount[16] = "Frames: 0\0";
-	Text_t frametext = init_text(framecount, font, 0, 0, white, renderer);
+	Text_t frametext; 
+	//init_text(&frametext, framecount, font, 0, 0, white, renderer);
 
 	int updates, count;
 	updates = count = 0;
 
-	/*
-	int w, h;
-	SDL_Texture *boardimg = NULL;
-	SDL_Rect boardrect;
-	if (!DEBUG_FLAG) boardimg = IMG_LoadTexture(renderer, "./assets/board.png");
-	else boardimg = IMG_LoadTexture(renderer, "./assets/boarddebug.png");
-	boardrect.x = 0; boardrect.y = 0; 
-	boardrect.w = 600; boardrect.h = 600;
-	*/
-
-	Node *nodes[WIDTH/GRID_SIZE * HEIGHT/GRID_SIZE]; /* temporary */
+	Node *nodes[WIDTH/GRID_SIZE * HEIGHT/GRID_SIZE]; 
 	int i, x, y; 
 	x = 0;
 	y = 0;
@@ -163,7 +151,11 @@ int main(int argc, char **argv)
 		n->rect.x = x;
 		n->rect.y = y;
 		x += GRID_SIZE;
-		if (x + GRID_SIZE > WIDTH) { x = 0; y += GRID_SIZE; } 
+		if (x + GRID_SIZE > WIDTH) 
+		{ 
+			x = 0; 
+			y += GRID_SIZE; 
+		} 
 		nodes[i] = n;
 	}
 
@@ -203,12 +195,11 @@ int main(int argc, char **argv)
 		/* Numbers */
 		if (NUMBERS_ENABLED) 
 		{ 
-			Text_t numbertext = init_text("", fonttwo, 0, 0, white, renderer); 
-			draw_numbers(renderer, nodes, GRID_SIZE, numbertext); 
+			Text_t *text;
+			text = malloc(sizeof(Text_t));
+			draw_numbers(renderer, nodes, GRID_SIZE, fonttwo, white, text); 
+			free(text);
 		}
-
-		/* Imgs */
-		//SDL_RenderCopy(renderer, boardimg, NULL, &boardrect);
 
 		/* FPS Counter */
 		if (FPS_FLAG) 
@@ -219,7 +210,7 @@ int main(int argc, char **argv)
 				sprintf(framecount, "Frames: %d\0", updates);
 				count++;
 				updates = 0;
-				frametext = init_text(framecount, font, 0, HEIGHT-10, white, renderer);
+				init_text(&frametext, framecount, font, 0, HEIGHT-10, white, renderer);
 			}
 			SDL_RenderCopy(renderer, frametext.texture, NULL, &frametext.rect);
 
@@ -231,6 +222,12 @@ int main(int argc, char **argv)
 		if (1000 / FPS > frametime) SDL_Delay((1000 / FPS) - frametime);
 	}
 
+	for (i = 0; i < WIDTH/GRID_SIZE * HEIGHT/GRID_SIZE; ++i)
+	{
+		free(nodes[i]);
+	}
+
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 

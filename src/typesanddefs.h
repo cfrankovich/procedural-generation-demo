@@ -3,7 +3,7 @@
 
 #define WIDTH 600 
 #define HEIGHT 600
-#define FPS 60 
+#define FPS 30 
 #define OPT_LIST "nhdfHDFS:B:L:?"
 #define RED 0
 #define GREEN 1

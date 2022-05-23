@@ -9,6 +9,6 @@
 void draw_grid_lines(SDL_Renderer *r, int size);
 
 /* Draw how many tiles are available in a grid spot */
-void draw_numbers(SDL_Renderer *r, Node **nodes, int size, Text_t text);
+void draw_numbers(SDL_Renderer *r, Node **nodes, int size, TTF_Font *f, SDL_Color c, Text_t *t);
 
 #endif

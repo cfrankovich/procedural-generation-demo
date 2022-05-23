@@ -17,6 +17,6 @@ typedef struct
 } Text_t;
 
 /* Returns the text type based on parameters given */
-Text_t init_text(char *textstring, TTF_Font *font, int x, int y, SDL_Color color, SDL_Renderer *renderer);
+void init_text(Text_t *thetext, char *textstring, TTF_Font *font, int x, int y, SDL_Color color, SDL_Renderer *rendrr);
 
 #endif

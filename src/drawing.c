@@ -27,23 +27,20 @@ void draw_grid_lines(SDL_Renderer *r, int size)
 
 }
 
-void draw_numbers(SDL_Renderer *r, Node **nodes, int size, Text_t text)
+void draw_numbers(SDL_Renderer *r, Node **nodes, int size, TTF_Font *f, SDL_Color c, Text_t *text)
 {
-	/* seg faults after a couple seconds in */
-	/* prolly something with memory */
-	/* returning from the function for now until fix */
-	/* issue posted since class is about to change */
-	return;
 	int i;
+	int x, y;
+	char idstring[4] = "XX\0";
 	for (i = 0; i < WIDTH/size * HEIGHT/size; ++i)
 	{
-		char idstring[4] = "\0";
 		sprintf(idstring, "%d\0", nodes[i]->id);
-		int x, y;
 		x = nodes[i]->rect.x + size/2 - 12;
 		y = nodes[i]->rect.y + size/2 - 12;
-		text = init_text(idstring, text.font, x, y, text.color, r); /* this line */ 
-		SDL_RenderCopy(r, text.texture, NULL, &text.rect);
+		init_text(text, idstring, f, x, y, c, r); 
+		SDL_RenderCopy(r, text->texture, NULL, &text->rect);
+		SDL_DestroyTexture(text->texture);
+		SDL_FreeSurface(text->surface);
 	}
 }
 
